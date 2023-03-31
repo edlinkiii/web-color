@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <title>Web Color Picker</title>
+</head>
+<body>
+    <div id="input">
+        <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb">
+        <label for="rValue">R:</label>
+        <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue">
+        <br>
+        <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb">
+        <label for="gValue">G:</label>
+        <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue">
+        <br>
+        <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb">
+        <label for="bValue">B:</label>
+        <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue">
+        <br>
+        <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl">
+        <label for="hValue">H:</label>
+        <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue">
+        <br>
+        <input type="range" data-color="s" min="0" max="100" step="1" value="0" class="hsl">
+        <label for="sValue">S:</label>
+        <input type="number" data-color="s" min="0" max="100" step="1" value="0" id="sValue">
+        <br>
+        <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl">
+        <label for="lValue">L:</label>
+        <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue">
+        <br>
+        <label for="hex">#<input type="text" id="hex" maxlength="6" pattern="[0-9A-Fa-f]{6}" value="222222" required></label>
+    </div>
+    <div id="output"></div>
+    <script src="./script.js"></script>
+</body>
+</html>
