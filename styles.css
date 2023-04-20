@@ -3,14 +3,21 @@ body {
     justify-content: center;
     align-items: center;
     height: 90vh;
+    font-family: 'Trebuchet MS', sans-serif;
+  }
+  body > div {
+    margin: 20px;
   }
   #input {
-      width: 210px;
-      height: 160px;
-      border: 1px solid #ddd;
+    width: 210px;
+    height: 194px;
+    border: 1px solid #ddd;
     padding: 20px;
     border-radius: 10px;
     background-color: white;
+  }
+  input[type="range"] {
+    cursor: ew-resize;
   }
   input#hex,
   input[type="number"] {
@@ -46,4 +53,27 @@ body {
       left: 3px;
       top: 3px;
   }
-  
+  .color-palate {
+    display: none;
+  }
+  p {
+    margin: 0;
+    text-align: center;
+    font-size: 1.75rem;
+  }
+  p.show-color {
+    display: flex;
+    overflow: hidden;
+    width: 300px;
+    border: 1px solid #ddd;
+    padding: 0px;
+    border-radius: 10px;
+    margin: 10px 0;
+  }
+  p.show-color span {
+    flex: 1;
+    display: inline-block;
+    line-height: 60px;
+    font-size: 1rem;
+    text-align: center;
+  }

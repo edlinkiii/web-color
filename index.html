@@ -9,33 +9,232 @@
 </head>
 <body>
     <div id="input">
-        <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb">
-        <label for="rValue">R:</label>
-        <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue">
+        <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb" title="Red">
+        <label for="rValue" title="Red">R:</label>
+        <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue" title="Red">
         <br>
-        <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb">
-        <label for="gValue">G:</label>
-        <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue">
+        <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb" title="Green">
+        <label for="gValue">G:</label title="Green">
+        <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue" title="Green">
         <br>
-        <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb">
-        <label for="bValue">B:</label>
-        <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue">
+        <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb" title="Blue">
+        <label for="bValue">B:</label title="Blue">
+        <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue" title="Blue">
         <br>
-        <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl">
-        <label for="hValue">H:</label>
-        <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue">
+        <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl" title="Hue">
+        <label for="hValue">H:</label title="Hue">
+        <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue" title="Hue">
         <br>
-        <input type="range" data-color="s" min="0" max="100" step="1" value="0" class="hsl">
-        <label for="sValue">S:</label>
-        <input type="number" data-color="s" min="0" max="100" step="1" value="0" id="sValue">
+        <input type="range" data-color="s" min="0" max="100" step="1" value="0" class="hsl" title="Saturation">
+        <label for="sValue">S:</label title="Saturation">
+        <input type="number" data-color="s" min="0" max="100" step="1" value="0" id="sValue" title="Saturation">
         <br>
-        <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl">
-        <label for="lValue">L:</label>
-        <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue">
+        <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl" title="Light">
+        <label for="lValue">L:</label title="Light">
+        <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue" title="Light">
         <br>
-        <label for="hex">#<input type="text" id="hex" maxlength="6" pattern="[0-9A-Fa-f]{6}" value="222222" required></label>
-    </div>
-    <div id="output"></div>
+        <div style="text-align: center;">
+          <label for="hex">#<input type="text" id="hex" maxlength="6" pattern="[0-9A-Fa-f]{6}" value="222222" required title="Hex Code"></label>
+        </div>
+        <br>
+        <label for="palate-select">Show Palate:</label>
+        <select id="palate-select">
+          <option value="">None</option>
+          <option value="2">2 Colors</option>
+          <option value="3">3 Colors</option>
+          <option value="4">4 Colors</option>
+          <option value="6">6 Colors</option>
+          <option value="8">8 Colors</option>
+          <option value="12">12 Colors</option>
+        </select>
+      </div>
+      <div id="palate-2" class="color-palate">
+        <p class="comp-0 show-color" title="Selected Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-180 show-color" title="Clashing Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+      </div>
+      <div id="palate-3" class="color-palate">
+        <p class="comp-0 show-color" title="Selected Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-120 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-240 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+      </div>
+      <div id="palate-4" class="color-palate">
+        <p class="comp-0 show-color" title="Selected Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-90 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-180 show-color" title="Clashing Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-270 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+      </div>
+      <div id="palate-6" class="color-palate">
+        <p class="comp-0 show-color" title="Selected Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-60 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-120 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-180 show-color" title="Clashing Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-240 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-300 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+      </div>
+      <div id="palate-8" class="color-palate">
+        <p class="comp-0 show-color" title="Selected Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-45 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-90 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-135 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-180 show-color" title="Clashing Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-225 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-270 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-315 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+      </div>
+      <div id="palate-12" class="color-palate">
+        <p class="comp-0 show-color" title="Selected Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-30 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-60 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-90 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-120 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-150 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-180 show-color" title="Clashing Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-210 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-240 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-270 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-300 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+        <p class="comp-330 show-color" title="Complementary Color" data-hex>
+          <span class="color-lite"></span>
+          <span class="color-norm"></span>
+          <span class="color-dark"></span>
+        </p>
+      </div>
     <script src="./script.js"></script>
 </body>
 </html>
