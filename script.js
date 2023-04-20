@@ -235,15 +235,6 @@ function hsl_input({ h, s, l }) {
     return { h: h / 359, s: s / 100, l: l / 100 };
 }
 
-// input  ({ r: 0~255, g:0~255, b:0~255 }, 0~359)
-// output { r: 0~255, g:0~255, b:0~255 }
-function getAdjustedColor(rgb, angle) {
-    const hsl = hsl_output(rgbToHsl(rgb));
-    const adjusted_hsl = colorAdjust(hsl, angle);
-    const adjusted_rgb = hslToRgb(hsl_input(adjusted_hsl));
-    return adjusted_rgb;
-}
-
 function setAdjustedColor(rgb, angle) {
     const hsl = hsl_output(rgbToHsl(rgb));
     const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
@@ -292,11 +283,6 @@ function getContrastColorHex({ r, g, b }) {
     return contrastColor;
 }
 
-function setContrastColor(hexColor) {
-    contrast.style.color = `#${hexColor}`;
-    // contrast.innerText = hexColor === "000000" ? "Black" : "White"
-}
-
 function colorAdjust(hsl, angle) {
     const _h = (hsl.h + angle) % 360;
     return {
@@ -307,6 +293,5 @@ function colorAdjust(hsl, angle) {
 
 function colorLightness(hsl, light) {
     const _l = hsl.l + light;
-
     return { ...hsl, l: _l < 0 ? 0 : _l > 100 ? 100 : _l };
 }
