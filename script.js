@@ -50,28 +50,28 @@ const storeAdjustedColor = ((colorData) => (rgb, angle) => {
         color: `${getContrastColorHex(adjusted_rgb)}`,
     };
 
-    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 30)));
+    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 25)));
     const very_lite_hex = buildHexValue(very_lite_rgb);
     color.very_lite = {
         backgroundColor: `${very_lite_hex}`,
         color: `${getContrastColorHex(very_lite_rgb)}`,
     };
 
-    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 15)));
+    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 10)));
     const lite_hex = buildHexValue(lite_rgb);
     color.lite = {
         backgroundColor: `${lite_hex}`,
         color: `${getContrastColorHex(lite_rgb)}`,
     };
 
-    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -15)));
+    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -10)));
     const dark_hex = buildHexValue(dark_rgb);
     color.dark = {
         backgroundColor: `${dark_hex}`,
         color: `${getContrastColorHex(dark_rgb)}`,
     };
 
-    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -30)));
+    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -25)));
     const very_dark_hex = buildHexValue(very_dark_rgb);
     color.very_dark = {
         backgroundColor: `${very_dark_hex}`,
