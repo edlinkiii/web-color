@@ -1,240 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles.css">
-    <title>Web Color Picker</title>
-</head>
-<body>
-    <div id="input">
-        <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb" title="Red">
-        <label for="rValue" title="Red">R:</label>
-        <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue" title="Red">
-        <br>
-        <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb" title="Green">
-        <label for="gValue">G:</label title="Green">
-        <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue" title="Green">
-        <br>
-        <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb" title="Blue">
-        <label for="bValue">B:</label title="Blue">
-        <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue" title="Blue">
-        <br>
-        <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl" title="Hue">
-        <label for="hValue">H:</label title="Hue">
-        <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue" title="Hue">
-        <br>
-        <input type="range" data-color="s" min="0" max="100" step="1" value="0" class="hsl" title="Saturation">
-        <label for="sValue">S:</label title="Saturation">
-        <input type="number" data-color="s" min="0" max="100" step="1" value="0" id="sValue" title="Saturation">
-        <br>
-        <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl" title="Light">
-        <label for="lValue">L:</label title="Light">
-        <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue" title="Light">
-        <br>
-        <div style="text-align: center;">
-          <label for="hex">#<input type="text" id="hex" maxlength="6" pattern="[0-9A-Fa-f]{6}" value="222222" required title="Hex Code"></label>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./styles.css" />
+        <title>Web Color Picker</title>
+    </head>
+    <body>
+        <div id="input">
+            <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb" title="Red" />
+            <label for="rValue" title="Red">R:</label>
+            <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue" title="Red" />
+            <br />
+            <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb" title="Green" />
+            <label for="gValue" title="Green">G:</label>
+            <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue" title="Green" />
+            <br />
+            <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb" title="Blue" />
+            <label for="bValue" title="Blue">B:</label>
+            <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue" title="Blue" />
+            <hr />
+            <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl" title="Hue" />
+            <label for="hValue" title="Hue">H:</label>
+            <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue" title="Hue" />
+            <br />
+            <input type="range" data-color="s" min="0" max="100" step="1" value="0" class="hsl" title="Saturation" />
+            <label for="sValue" title="Saturation">S:</label>
+            <input type="number" data-color="s" min="0" max="100" step="1" value="0" id="sValue" title="Saturation" />
+            <br />
+            <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl" title="Light" />
+            <label for="lValue" title="Light">L:</label>
+            <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue" title="Light" />
+            <hr />
+            <div class="align-center">
+                <label for="hex">
+                    #<input
+                        type="text"
+                        id="hex"
+                        maxlength="6"
+                        pattern="[0-9A-Fa-f]{6}"
+                        value="222222"
+                        required
+                        title="Hex Code"
+                    />
+                </label>
+            </div>
+            <br />
+            <div class="align-center">
+                <label for="palate-select">Show Palate:</label>
+                <select id="palate-select">
+                    <option value="">None</option>
+                    <option value="2">2 Colors</option>
+                    <option value="3">3 Colors</option>
+                    <option value="4">4 Colors</option>
+                    <option value="5">5 Colors</option>
+                    <option value="6">6 Colors</option>
+                    <option value="8">8 Colors</option>
+                    <option value="10">10 Colors</option>
+                    <option value="12">12 Colors</option>
+                </select>
+            </div>
         </div>
-        <br>
-        <label for="palate-select">Show Palate:</label>
-        <select id="palate-select">
-          <option value="">None</option>
-          <option value="2">2 Colors</option>
-          <option value="3">3 Colors</option>
-          <option value="4">4 Colors</option>
-          <option value="6">6 Colors</option>
-          <option value="8">8 Colors</option>
-          <option value="12">12 Colors</option>
-        </select>
-      </div>
-      <div id="palate-2" class="color-palate">
-        <p class="comp-0 show-color" title="Selected Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-180 show-color" title="Clashing Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-      </div>
-      <div id="palate-3" class="color-palate">
-        <p class="comp-0 show-color" title="Selected Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-120 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-240 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-      </div>
-      <div id="palate-4" class="color-palate">
-        <p class="comp-0 show-color" title="Selected Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-90 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-180 show-color" title="Clashing Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-270 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-      </div>
-      <div id="palate-6" class="color-palate">
-        <p class="comp-0 show-color" title="Selected Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-60 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-120 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-180 show-color" title="Clashing Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-240 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-300 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-      </div>
-      <div id="palate-8" class="color-palate">
-        <p class="comp-0 show-color" title="Selected Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-45 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-90 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-135 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-180 show-color" title="Clashing Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-225 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-270 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-315 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-      </div>
-      <div id="palate-12" class="color-palate">
-        <p class="comp-0 show-color" title="Selected Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-30 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-60 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-90 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-120 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-150 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-180 show-color" title="Clashing Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-210 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-240 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-270 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-300 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-        <p class="comp-330 show-color" title="Complementary Color">
-          <span class="color-lite"></span>
-          <span class="color-norm"></span>
-          <span class="color-dark"></span>
-        </p>
-      </div>
-    <script src="./script.js"></script>
-</body>
+        <div id="palate-output"></div>
+        <template id="show-color">
+            <p class="show-color">
+                <span class="color-very-lite"></span>
+                <span class="color-lite"></span>
+                <span class="color-norm"></span>
+                <span class="color-dark"></span>
+                <span class="color-very-dark"></span>
+            </p>
+        </template>
+    </body>
 </html>

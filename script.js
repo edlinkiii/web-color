@@ -2,6 +2,121 @@
 const $q = (singleSelector) => document.querySelector(singleSelector);
 const $qa = (multiSelector) => document.querySelectorAll(multiSelector);
 
+const palates = {
+    2: [0, 180],
+    3: [0, 120, 240],
+    4: [0, 90, 180, 270],
+    5: [0, 72, 144, 216, 288],
+    6: [0, 60, 120, 180, 240, 300],
+    8: [0, 45, 90, 135, 180, 225, 270, 315],
+    10: [0, 36, 72, 108, 144, 180, 216, 252, 288, 324],
+    12: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
+};
+
+const colorData = {
+    0: {},
+    30: {},
+    36: {},
+    45: {},
+    60: {},
+    72: {},
+    90: {},
+    108: {},
+    120: {},
+    135: {},
+    144: {},
+    150: {},
+    180: {},
+    210: {},
+    216: {},
+    225: {},
+    240: {},
+    252: {},
+    270: {},
+    288: {},
+    300: {},
+    315: {},
+    324: {},
+    330: {},
+};
+const storeAdjustedColor = ((colorData) => (rgb, angle) => {
+    const hsl = hsl_output(rgbToHsl(rgb));
+    const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
+    const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
+    const adjusted_hex = buildHexValue(adjusted_rgb);
+    const color = colorData[angle];
+    color.norm = {
+        backgroundColor: `${adjusted_hex}`,
+        color: `${getContrastColorHex(adjusted_rgb)}`,
+    };
+
+    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 30)));
+    const very_lite_hex = buildHexValue(very_lite_rgb);
+    color.very_lite = {
+        backgroundColor: `${very_lite_hex}`,
+        color: `${getContrastColorHex(very_lite_rgb)}`,
+    };
+
+    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 15)));
+    const lite_hex = buildHexValue(lite_rgb);
+    color.lite = {
+        backgroundColor: `${lite_hex}`,
+        color: `${getContrastColorHex(lite_rgb)}`,
+    };
+
+    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -15)));
+    const dark_hex = buildHexValue(dark_rgb);
+    color.dark = {
+        backgroundColor: `${dark_hex}`,
+        color: `${getContrastColorHex(dark_rgb)}`,
+    };
+
+    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -30)));
+    const very_dark_hex = buildHexValue(very_dark_rgb);
+    color.very_dark = {
+        backgroundColor: `${very_dark_hex}`,
+        color: `${getContrastColorHex(very_dark_rgb)}`,
+    };
+
+    const palate = palateOutput.querySelector(`p.palate-${angle}`);
+    if (palate) {
+        const very_lite = palate.querySelector("span.color-very-lite");
+        very_lite.innerText = `#${color.very_lite.backgroundColor}`;
+        very_lite.style.backgroundColor = `#${color.very_lite.backgroundColor}`;
+        very_lite.style.color = `#${color.very_lite.color}`;
+
+        const lite = palate.querySelector("span.color-lite");
+        lite.innerText = `#${color.lite.backgroundColor}`;
+        lite.style.backgroundColor = `#${color.lite.backgroundColor}`;
+        lite.style.color = `#${color.lite.color}`;
+
+        const norm = palate.querySelector("span.color-norm");
+        norm.innerText = `#${color.norm.backgroundColor}`;
+        norm.style.backgroundColor = `#${color.norm.backgroundColor}`;
+        norm.style.color = `#${color.norm.color}`;
+
+        const dark = palate.querySelector("span.color-dark");
+        dark.innerText = `#${color.dark.backgroundColor}`;
+        dark.style.backgroundColor = `#${color.dark.backgroundColor}`;
+        dark.style.color = `#${color.dark.color}`;
+
+        const very_dark = palate.querySelector("span.color-very-dark");
+        very_dark.innerText = `#${color.very_dark.backgroundColor}`;
+        very_dark.style.backgroundColor = `#${color.very_dark.backgroundColor}`;
+        very_dark.style.color = `#${color.very_dark.color}`;
+    }
+    // console.log(color);
+})(colorData);
+
+const angles = [
+    0, 30, 36, 45, 60, 72, 90, 108, 120, 135, 144, 150, 180, 210, 216, 225, 240, 252, 270, 288, 300, 315, 324, 330,
+];
+const displayComplementaryColors = ((angles) => (rgb) => {
+    angles.forEach((angle) => {
+        storeAdjustedColor(rgb, angle);
+    });
+})(angles);
+
 // define element variables
 const output = $q("body");
 const hex = $q("#hex");
@@ -15,6 +130,8 @@ const hsl_inputs = {
     s: $qa("input[data-color='s']"),
     l: $qa("input[data-color='l']"),
 };
+const palateOutput = $q("#palate-output");
+const palateTemplate = $q("#show-color");
 
 // set and display defaults
 const rgb = { r: 0, g: 0, b: 0 };
@@ -50,9 +167,10 @@ hex.addEventListener("input", ({ target: { value } }) => {
 });
 
 $q("#palate-select").addEventListener("change", ({ target }) => {
-    $qa(".color-palate").forEach((palate) => (palate.style.display = "none"));
-    const pNum = target.value;
-    if (pNum) $q(`div#palate-${pNum}`).style.display = "block";
+    palateOutput.querySelectorAll("p").forEach((p) => p.remove());
+
+    const palateSize = target.value;
+    palateSize && buildPalate(palateSize);
 });
 
 // handle (color adjust) slider input events
@@ -235,44 +353,13 @@ function hsl_input({ h, s, l }) {
     return { h: h / 359, s: s / 100, l: l / 100 };
 }
 
-function setAdjustedColor(rgb, angle) {
+// input  ({ r: 0~255, g:0~255, b:0~255 }, 0~359)
+// output { r: 0~255, g:0~255, b:0~255 }
+function getAdjustedColor(rgb, angle) {
     const hsl = hsl_output(rgbToHsl(rgb));
-    const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
-    const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
-    const adjusted_hex = buildHexValue(adjusted_rgb);
-    const els = $qa(`.comp-${angle}`);
-    els.forEach((el) => {
-        const lite = el.querySelector(".color-lite");
-        const norm = el.querySelector(".color-norm");
-        const dark = el.querySelector(".color-dark");
-        const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 15)));
-        const lite_hex = buildHexValue(lite_rgb);
-        const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -15)));
-        const dark_hex = buildHexValue(dark_rgb);
-        norm.style.backgroundColor = `#${adjusted_hex}`;
-        norm.style.color = `#${getContrastColorHex(adjusted_rgb)}`;
-        norm.dataset.hex = `${adjusted_hex}`;
-        // norm.innerText = `${angle}°`; // `${angle}° #${adjusted_hex}`;
-        norm.innerText = `#${adjusted_hex}`;
-
-        lite.style.backgroundColor = `#${lite_hex}`;
-        lite.style.color = `#${getContrastColorHex(lite_rgb)}`;
-        lite.dataset.hex = `${lite_hex}`;
-        lite.innerText = `#${lite_hex}`;
-
-        dark.style.backgroundColor = `#${dark_hex}`;
-        dark.style.color = `#${getContrastColorHex(dark_rgb)}`;
-        dark.dataset.hex = `${dark_hex}`;
-        dark.innerText = `#${dark_hex}`;
-    });
-}
-
-function displayComplementaryColors(rgb) {
-    const angles = [0, 30, 45, 60, 90, 120, 135, 150, 180, 210, 225, 240, 270, 300, 315, 330];
-
-    angles.forEach((angle) => {
-        setAdjustedColor(rgb, angle);
-    });
+    const adjusted_hsl = colorAdjust(hsl, angle);
+    const adjusted_rgb = hslToRgb(hsl_input(adjusted_hsl));
+    return adjusted_rgb;
 }
 
 // input  { r: 0~255, g:0~255, b:0~255 }
@@ -281,6 +368,10 @@ function getContrastColorHex({ r, g, b }) {
     const relativeLuminance = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
     const contrastColor = relativeLuminance > 0.5 ? "000000" : "FFFFFF";
     return contrastColor;
+}
+
+function setContrastColor(hexColor) {
+    contrast.style.color = `#${hexColor}`;
 }
 
 function colorAdjust(hsl, angle) {
@@ -294,4 +385,40 @@ function colorAdjust(hsl, angle) {
 function colorLightness(hsl, light) {
     const _l = hsl.l + light;
     return { ...hsl, l: _l < 0 ? 0 : _l > 100 ? 100 : _l };
+}
+
+function buildPalate(size) {
+    palates[size].forEach((num) => {
+        const palateClone = palateTemplate.content.cloneNode(true);
+
+        const palate = palateClone.querySelector("p.show-color");
+        palate.classList.add(`palate-${num}`);
+
+        const very_lite = palateClone.querySelector("span.color-very-lite");
+        very_lite.innerText = `#${colorData[num].very_lite.backgroundColor}`;
+        very_lite.style.backgroundColor = `#${colorData[num].very_lite.backgroundColor}`;
+        very_lite.style.color = `#${colorData[num].very_lite.color}`;
+
+        const lite = palateClone.querySelector("span.color-lite");
+        lite.innerText = `#${colorData[num].lite.backgroundColor}`;
+        lite.style.backgroundColor = `#${colorData[num].lite.backgroundColor}`;
+        lite.style.color = `#${colorData[num].lite.color}`;
+
+        const norm = palateClone.querySelector("span.color-norm");
+        norm.innerText = `#${colorData[num].norm.backgroundColor}`;
+        norm.style.backgroundColor = `#${colorData[num].norm.backgroundColor}`;
+        norm.style.color = `#${colorData[num].norm.color}`;
+
+        const dark = palateClone.querySelector("span.color-dark");
+        dark.innerText = `#${colorData[num].dark.backgroundColor}`;
+        dark.style.backgroundColor = `#${colorData[num].dark.backgroundColor}`;
+        dark.style.color = `#${colorData[num].dark.color}`;
+
+        const very_dark = palateClone.querySelector("span.color-very-dark");
+        very_dark.innerText = `#${colorData[num].very_dark.backgroundColor}`;
+        very_dark.style.backgroundColor = `#${colorData[num].very_dark.backgroundColor}`;
+        very_dark.style.color = `#${colorData[num].very_dark.color}`;
+
+        palateOutput.appendChild(palateClone);
+    });
 }

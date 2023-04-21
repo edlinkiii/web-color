@@ -2,78 +2,88 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 90vh;
-    font-family: 'Trebuchet MS', sans-serif;
-  }
-  body > div {
+    height: 100vh;
+    font-family: "Trebuchet MS", sans-serif;
+    y-overflow: auto;
+}
+body > div {
     margin: 20px;
-  }
-  #input {
-    width: 210px;
-    height: 194px;
+}
+#input {
+    min-width: 210px;
+    height: auto;
     border: 1px solid #ddd;
     padding: 20px;
     border-radius: 10px;
     background-color: white;
-  }
-  input[type="range"] {
+}
+input[type="range"] {
     cursor: ew-resize;
-  }
-  input#hex,
-  input[type="number"] {
-      width: 40px;
-      border: 1px solid #eee;
-      border-radius: 4px;
-      color: #555;
-  }
-  input#hex:focus,
-  input[type="number"]:focus {
-      border: 1px solid #bbb;
-      outline: 0;
-  }
-  input#hex {
-      width: 60px;
-  }
-  label {
-      font-weight: bold;
-  }
-  label:has(#hex:valid)::after {
-      content: "✓";
-      color: green;
-      font-weight: 900;
-      position: relative;
-      left: 3px;
-      top: 3px;
-  }
-  label:has(#hex:invalid)::after {
-      content: "✗";
-      color: red;
-      font-weight: normal;
-      position: relative;
-      left: 3px;
-      top: 3px;
-  }
-  .color-palate {
+}
+select,
+input#hex,
+input[type="number"] {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    color: #555;
+    background-color: #fff;
+}
+input#hex,
+input[type="number"] {
+    width: 40px;
+}
+input#hex:focus,
+input[type="number"]:focus {
+    border: 1px solid #bbb;
+    outline: 0;
+}
+input#hex {
+    width: 60px;
+}
+label {
+    font-weight: bold;
+}
+label:has(#hex:valid)::after {
+    content: "✓";
+    color: green;
+    font-weight: 900;
+    position: relative;
+    left: 3px;
+    top: 3px;
+}
+label:has(#hex:invalid)::after {
+    content: "✗";
+    color: red;
+    font-weight: normal;
+    position: relative;
+    left: 3px;
+    top: 3px;
+}
+.color-palate {
     display: none;
-  }
-  p {
+}
+p {
     margin: 0;
     text-align: center;
     font-size: 1.75rem;
-  }
-  p.show-color {
+}
+p.show-color {
     display: flex;
     overflow: hidden;
-    width: 300px;
+    width: 500px;
     border: 1px solid #ddd;
     padding: 0px;
     border-radius: 10px;
     margin: 10px 0;
-  }
-  p.show-color span {
+}
+p.show-color span {
     flex: 1;
     display: inline-block;
     line-height: 60px;
     font-size: 1rem;
     text-align: center;
-  }
+}
+
+.align-center {
+    text-align: center;
+}
