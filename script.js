@@ -10,11 +10,13 @@ const rgb_inputs = {
     g: $qa("input[data-color='g']"),
     b: $qa("input[data-color='b']"),
 };
+const rgb_inputArray = [...rgb_inputs.r, ...rgb_inputs.g, ...rgb_inputs.b];
 const hsl_inputs = {
     h: $qa("input[data-color='h']"),
     s: $qa("input[data-color='s']"),
     l: $qa("input[data-color='l']"),
 };
+const hsl_inputArray = [...hsl_inputs.h, ...hsl_inputs.s, ...hsl_inputs.l];
 const palateOutput = $q("#palate-output");
 const palateTemplate = $q("#show-color");
 const palateSelect = $q("select#palate-select");
@@ -51,17 +53,11 @@ generateComplementaryColors(rgb);
 displayHexValue(rgbHex);
 
 // create event listeners
-[...rgb_inputs.r, ...rgb_inputs.g, ...rgb_inputs.b].forEach((input) => {
-    input.addEventListener("input", rgb_handleColorInput);
-});
+rgb_inputArray.forEach((input) => input.addEventListener("input", rgb_handleColorInput));
 
-[...hsl_inputs.h, ...hsl_inputs.s, ...hsl_inputs.l].forEach((input) => {
-    input.addEventListener("input", hsl_handleColorInput);
-});
+hsl_inputArray.forEach((input) => input.addEventListener("input", hsl_handleColorInput));
 
-hex.addEventListener("input", ({ target: { value } }) => {
-    handleHexInput(value);
-});
+hex.addEventListener("input", ({ target: { value } }) => handleHexInput(value));
 
 palateSelect.addEventListener("change", ({ target }) => {
     palateOutput.querySelectorAll("p").forEach((p) => p.remove());
@@ -71,15 +67,14 @@ palateSelect.addEventListener("change", ({ target }) => {
 });
 
 // handle (color adjust) slider input events
-function rgb_handleColorInput(evt) {
-    const {
-        target: {
-            value,
-            max,
-            min,
-            dataset: { color },
-        },
-    } = evt;
+function rgb_handleColorInput({
+    target: {
+        value,
+        max,
+        min,
+        dataset: { color },
+    },
+}) {
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     rgb[color] = colorValue;
     rgb_syncInputValues(color, colorValue);
@@ -91,15 +86,14 @@ function rgb_handleColorInput(evt) {
     generateComplementaryColors(rgb);
 }
 
-function hsl_handleColorInput(evt) {
-    const {
-        target: {
-            value,
-            max,
-            min,
-            dataset: { color },
-        },
-    } = evt;
+function hsl_handleColorInput({
+    target: {
+        value,
+        max,
+        min,
+        dataset: { color },
+    },
+}) {
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     hsl[color] = colorValue;
     hsl_syncInputValues(color, colorValue);
@@ -390,4 +384,3 @@ function generateComplementaryColors(rgb) {
         storeAdjustedColor(rgb, angle);
     });
 }
-
