@@ -61,30 +61,7 @@ const storeAdjustedColor = (rgb, angle) => {
 
     const palate = palateOutput.querySelector(`p.palate-${angle}`);
     if (palate) {
-        const very_lite = palate.querySelector("span.color-very-lite");
-        very_lite.innerText = `#${color.very_lite.backgroundColor}`;
-        very_lite.style.backgroundColor = `#${color.very_lite.backgroundColor}`;
-        very_lite.style.color = `#${color.very_lite.color}`;
-
-        const lite = palate.querySelector("span.color-lite");
-        lite.innerText = `#${color.lite.backgroundColor}`;
-        lite.style.backgroundColor = `#${color.lite.backgroundColor}`;
-        lite.style.color = `#${color.lite.color}`;
-
-        const norm = palate.querySelector("span.color-norm");
-        norm.innerText = `#${color.norm.backgroundColor}`;
-        norm.style.backgroundColor = `#${color.norm.backgroundColor}`;
-        norm.style.color = `#${color.norm.color}`;
-
-        const dark = palate.querySelector("span.color-dark");
-        dark.innerText = `#${color.dark.backgroundColor}`;
-        dark.style.backgroundColor = `#${color.dark.backgroundColor}`;
-        dark.style.color = `#${color.dark.color}`;
-
-        const very_dark = palate.querySelector("span.color-very-dark");
-        very_dark.innerText = `#${color.very_dark.backgroundColor}`;
-        very_dark.style.backgroundColor = `#${color.very_dark.backgroundColor}`;
-        very_dark.style.color = `#${color.very_dark.color}`;
+        updatePalateColors(palate, color);
     }
 };
 
@@ -375,30 +352,7 @@ function buildPalate(size) {
         const palate = palateClone.querySelector("p.show-color");
         palate.classList.add(`palate-${angle}`);
 
-        const very_lite = palateClone.querySelector("span.color-very-lite");
-        very_lite.innerText = `#${colorData[angle].very_lite.backgroundColor}`;
-        very_lite.style.backgroundColor = `#${colorData[angle].very_lite.backgroundColor}`;
-        very_lite.style.color = `#${colorData[angle].very_lite.color}`;
-
-        const lite = palateClone.querySelector("span.color-lite");
-        lite.innerText = `#${colorData[angle].lite.backgroundColor}`;
-        lite.style.backgroundColor = `#${colorData[angle].lite.backgroundColor}`;
-        lite.style.color = `#${colorData[angle].lite.color}`;
-
-        const norm = palateClone.querySelector("span.color-norm");
-        norm.innerText = `#${colorData[angle].norm.backgroundColor}`;
-        norm.style.backgroundColor = `#${colorData[angle].norm.backgroundColor}`;
-        norm.style.color = `#${colorData[angle].norm.color}`;
-
-        const dark = palateClone.querySelector("span.color-dark");
-        dark.innerText = `#${colorData[angle].dark.backgroundColor}`;
-        dark.style.backgroundColor = `#${colorData[angle].dark.backgroundColor}`;
-        dark.style.color = `#${colorData[angle].dark.color}`;
-
-        const very_dark = palateClone.querySelector("span.color-very-dark");
-        very_dark.innerText = `#${colorData[angle].very_dark.backgroundColor}`;
-        very_dark.style.backgroundColor = `#${colorData[angle].very_dark.backgroundColor}`;
-        very_dark.style.color = `#${colorData[angle].very_dark.color}`;
+        updatePalateColors(palateClone, colorData[angle]);
 
         palateOutput.appendChild(palateClone);
     });
@@ -415,4 +369,31 @@ function addPalateOption(size) {
     option.value = size;
     option.innerText = `${size} Colors`;
     palateSelect.appendChild(option);
+}
+
+function updatePalateColors(palateElement, color) {
+    const very_lite = palateElement.querySelector("span.color-very-lite");
+    very_lite.innerText = `#${color.very_lite.backgroundColor}`;
+    very_lite.style.backgroundColor = `#${color.very_lite.backgroundColor}`;
+    very_lite.style.color = `#${color.very_lite.color}`;
+
+    const lite = palateElement.querySelector("span.color-lite");
+    lite.innerText = `#${color.lite.backgroundColor}`;
+    lite.style.backgroundColor = `#${color.lite.backgroundColor}`;
+    lite.style.color = `#${color.lite.color}`;
+
+    const norm = palateElement.querySelector("span.color-norm");
+    norm.innerText = `#${color.norm.backgroundColor}`;
+    norm.style.backgroundColor = `#${color.norm.backgroundColor}`;
+    norm.style.color = `#${color.norm.color}`;
+
+    const dark = palateElement.querySelector("span.color-dark");
+    dark.innerText = `#${color.dark.backgroundColor}`;
+    dark.style.backgroundColor = `#${color.dark.backgroundColor}`;
+    dark.style.color = `#${color.dark.color}`;
+
+    const very_dark = palateElement.querySelector("span.color-very-dark");
+    very_dark.innerText = `#${color.very_dark.backgroundColor}`;
+    very_dark.style.backgroundColor = `#${color.very_dark.backgroundColor}`;
+    very_dark.style.color = `#${color.very_dark.color}`;
 }
