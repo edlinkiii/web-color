@@ -24,7 +24,7 @@ const palateSelect = $q("select#palate-select");
 // setup
 const angleArray = [0];
 const palateAngles = {};
-const palates = [2, 3, 4, 5, 6, 8, 10, 12];
+const palates = [2, 3, 4, 5, 6, 8, 10, 12, 15, 18, 20];
 palates.forEach((palateSize) => {
     addPalateOption(palateSize);
     palateAngles[palateSize] = [0];
