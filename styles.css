@@ -19,6 +19,7 @@ body > div {
 }
 input[type="range"] {
     cursor: ew-resize;
+    accent-color: black;
 }
 select,
 input#hex,

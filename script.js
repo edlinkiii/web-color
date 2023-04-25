@@ -13,33 +13,9 @@ const palates = {
     12: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
 };
 
-const colorData = {
-    0: {},
-    30: {},
-    36: {},
-    45: {},
-    60: {},
-    72: {},
-    90: {},
-    108: {},
-    120: {},
-    135: {},
-    144: {},
-    150: {},
-    180: {},
-    210: {},
-    216: {},
-    225: {},
-    240: {},
-    252: {},
-    270: {},
-    288: {},
-    300: {},
-    315: {},
-    324: {},
-    330: {},
-};
-const storeAdjustedColor = ((colorData) => (rgb, angle) => {
+const colorData = { 0: {}, 30: {}, 36: {}, 45: {}, 60: {}, 72: {}, 90: {}, 108:{}, 120: {}, 135: {}, 144: {}, 150: {}, 180: {}, 210: {}, 216: {}, 225: {}, 240: {}, 252:{}, 270: {}, 288: {}, 300: {}, 315: {}, 324:{}, 330: {}, };
+const storeAdjustedColor = ((colorData) => 
+  (rgb, angle) => {
     const hsl = hsl_output(rgbToHsl(rgb));
     const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
     const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
@@ -50,28 +26,28 @@ const storeAdjustedColor = ((colorData) => (rgb, angle) => {
         color: `${getContrastColorHex(adjusted_rgb)}`,
     };
 
-    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 25)));
+    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 30)));
     const very_lite_hex = buildHexValue(very_lite_rgb);
     color.very_lite = {
         backgroundColor: `${very_lite_hex}`,
         color: `${getContrastColorHex(very_lite_rgb)}`,
     };
 
-    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 10)));
+    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 12.5)));
     const lite_hex = buildHexValue(lite_rgb);
     color.lite = {
         backgroundColor: `${lite_hex}`,
         color: `${getContrastColorHex(lite_rgb)}`,
     };
 
-    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -10)));
+    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -12.5)));
     const dark_hex = buildHexValue(dark_rgb);
     color.dark = {
         backgroundColor: `${dark_hex}`,
         color: `${getContrastColorHex(dark_rgb)}`,
     };
 
-    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -25)));
+    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -30)));
     const very_dark_hex = buildHexValue(very_dark_rgb);
     color.very_dark = {
         backgroundColor: `${very_dark_hex}`,
@@ -142,7 +118,8 @@ hsl_syncAllInputValues(hsl);
 
 const rgbHex = buildHexValue(rgb);
 setBackgroundColor(rgbHex);
-displayComplementaryColors(rgb);
+setAccentColor(rgbHex);
+displayComplementaryColors(rgb)
 displayHexValue(rgbHex);
 
 // create event listeners
@@ -175,40 +152,28 @@ $q("#palate-select").addEventListener("change", ({ target }) => {
 
 // handle (color adjust) slider input events
 function rgb_handleColorInput(evt) {
-    const {
-        target: {
-            value,
-            max,
-            min,
-            dataset: { color },
-        },
-    } = evt;
+    const { target: { value, max, min, dataset: { color } } } = evt;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     rgb[color] = colorValue;
     rgb_syncInputValues(color, colorValue);
     const hexValue = buildHexValue(rgb);
     setBackgroundColor(hexValue);
-    displayComplementaryColors(rgb);
+    setAccentColor(hexValue);
+    displayComplementaryColors(rgb)
     displayHexValue(hexValue);
     hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
 }
 
 function hsl_handleColorInput(evt) {
-    const {
-        target: {
-            value,
-            max,
-            min,
-            dataset: { color },
-        },
-    } = evt;
+    const { target: { value, max, min, dataset: { color } } } = evt;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     hsl[color] = colorValue;
     hsl_syncInputValues(color, colorValue);
     rgb_syncAllInputValues(update_rgb(hslToRgb(hsl_input(hsl))));
     const hexValue = buildHexValue(rgb);
     setBackgroundColor(hexValue);
-    displayComplementaryColors(rgb);
+    setAccentColor(hexValue);
+    displayComplementaryColors(rgb)
     displayHexValue(hexValue);
 }
 
@@ -217,6 +182,7 @@ function handleHexInput(value) {
     const values = value.match(/[0-9a-fA-F]{2}/g);
     if (values?.length === 3) {
         setBackgroundColor(value);
+        setAccentColor(value);
         Object.keys(rgb).forEach((color, i) => (rgb[color] = hexToNum(values[i])));
         displayComplementaryColors(rgb);
         rgb_syncAllInputValues(rgb);
@@ -420,5 +386,11 @@ function buildPalate(size) {
         very_dark.style.color = `#${colorData[num].very_dark.color}`;
 
         palateOutput.appendChild(palateClone);
+  })
+}
+
+function setAccentColor(hexColor) {
+  $qa(`input[type="range"]`).forEach((range) => {
+    range.style.accentColor = `#${hexColor}`;
     });
 }
