@@ -2,8 +2,24 @@
 const $q = (singleSelector) => document.querySelector(singleSelector);
 const $qa = (multiSelector) => document.querySelectorAll(multiSelector);
 
+// define element variables
+const output = $q("body");
+const hex = $q("#hex");
+const rgb_inputs = {
+    r: $qa("input[data-color='r']"),
+    g: $qa("input[data-color='g']"),
+    b: $qa("input[data-color='b']"),
+};
+const hsl_inputs = {
+    h: $qa("input[data-color='h']"),
+    s: $qa("input[data-color='s']"),
+    l: $qa("input[data-color='l']"),
+};
+const palateOutput = $q("#palate-output");
+const palateTemplate = $q("#show-color");
 const palateSelect = $q("select#palate-select");
 
+// setup
 const angleArray = [0];
 const palateAngles = {};
 const palates = [2, 3, 4, 5, 6, 8, 10, 12];
@@ -20,72 +36,6 @@ const angles = [...new Set(angleArray)];
 const colorData = {};
 angles.forEach((angle) => (colorData[angle] = {}));
 const colorWidth = [12.5, 25];
-const storeAdjustedColor = (rgb, angle) => {
-    const [narrow, wide] = colorWidth;
-    const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
-    const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
-    const adjusted_hex = buildHexValue(adjusted_rgb);
-    const color = colorData[angle];
-    color.norm = {
-        backgroundColor: `${adjusted_hex}`,
-        color: `${getContrastColorHex(adjusted_rgb)}`,
-    };
-
-    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, wide)));
-    const very_lite_hex = buildHexValue(very_lite_rgb);
-    color.very_lite = {
-        backgroundColor: `${very_lite_hex}`,
-        color: `${getContrastColorHex(very_lite_rgb)}`,
-    };
-
-    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, narrow)));
-    const lite_hex = buildHexValue(lite_rgb);
-    color.lite = {
-        backgroundColor: `${lite_hex}`,
-        color: `${getContrastColorHex(lite_rgb)}`,
-    };
-
-    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -narrow)));
-    const dark_hex = buildHexValue(dark_rgb);
-    color.dark = {
-        backgroundColor: `${dark_hex}`,
-        color: `${getContrastColorHex(dark_rgb)}`,
-    };
-
-    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -wide)));
-    const very_dark_hex = buildHexValue(very_dark_rgb);
-    color.very_dark = {
-        backgroundColor: `${very_dark_hex}`,
-        color: `${getContrastColorHex(very_dark_rgb)}`,
-    };
-
-    const palate = palateOutput.querySelector(`p.palate-${angle}`);
-    if (palate) {
-        updatePalateColors(palate, color);
-    }
-};
-
-const generateComplementaryColors = (rgb) => {
-    angles.forEach((angle) => {
-        storeAdjustedColor(rgb, angle);
-    });
-};
-
-// define element variables
-const output = $q("body");
-const hex = $q("#hex");
-const rgb_inputs = {
-    r: $qa("input[data-color='r']"),
-    g: $qa("input[data-color='g']"),
-    b: $qa("input[data-color='b']"),
-};
-const hsl_inputs = {
-    h: $qa("input[data-color='h']"),
-    s: $qa("input[data-color='s']"),
-    l: $qa("input[data-color='l']"),
-};
-const palateOutput = $q("#palate-output");
-const palateTemplate = $q("#show-color");
 
 // set and display defaults
 const rgb = { r: 0, g: 0, b: 0 };
@@ -107,14 +57,6 @@ displayHexValue(rgbHex);
 
 [...hsl_inputs.h, ...hsl_inputs.s, ...hsl_inputs.l].forEach((input) => {
     input.addEventListener("input", hsl_handleColorInput);
-});
-
-$qa(".show-color > span").forEach((el) => {
-    el.addEventListener("click", ({ target }) => {
-        console.log(`#${target.dataset.hex}`);
-        // hex.value = target.dataset.hex;
-        // handleHexInput(target.dataset.hex);
-    });
 });
 
 hex.addEventListener("input", ({ target: { value } }) => {
@@ -397,3 +339,55 @@ function updatePalateColors(palateElement, color) {
     very_dark.style.backgroundColor = `#${color.very_dark.backgroundColor}`;
     very_dark.style.color = `#${color.very_dark.color}`;
 }
+
+function storeAdjustedColor(rgb, angle) {
+    const [narrow, wide] = colorWidth;
+    const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
+    const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
+    const adjusted_hex = buildHexValue(adjusted_rgb);
+    const color = colorData[angle];
+    color.norm = {
+        backgroundColor: `${adjusted_hex}`,
+        color: `${getContrastColorHex(adjusted_rgb)}`,
+    };
+
+    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, wide)));
+    const very_lite_hex = buildHexValue(very_lite_rgb);
+    color.very_lite = {
+        backgroundColor: `${very_lite_hex}`,
+        color: `${getContrastColorHex(very_lite_rgb)}`,
+    };
+
+    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, narrow)));
+    const lite_hex = buildHexValue(lite_rgb);
+    color.lite = {
+        backgroundColor: `${lite_hex}`,
+        color: `${getContrastColorHex(lite_rgb)}`,
+    };
+
+    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -narrow)));
+    const dark_hex = buildHexValue(dark_rgb);
+    color.dark = {
+        backgroundColor: `${dark_hex}`,
+        color: `${getContrastColorHex(dark_rgb)}`,
+    };
+
+    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -wide)));
+    const very_dark_hex = buildHexValue(very_dark_rgb);
+    color.very_dark = {
+        backgroundColor: `${very_dark_hex}`,
+        color: `${getContrastColorHex(very_dark_rgb)}`,
+    };
+
+    const palate = palateOutput.querySelector(`p.palate-${angle}`);
+    if (palate) {
+        updatePalateColors(palate, color);
+    }
+}
+
+function generateComplementaryColors(rgb) {
+    angles.forEach((angle) => {
+        storeAdjustedColor(rgb, angle);
+    });
+}
+
