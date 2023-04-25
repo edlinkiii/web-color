@@ -2,21 +2,26 @@
 const $q = (singleSelector) => document.querySelector(singleSelector);
 const $qa = (multiSelector) => document.querySelectorAll(multiSelector);
 
-const palates = {
-    2: [0, 180],
-    3: [0, 120, 240],
-    4: [0, 90, 180, 270],
-    5: [0, 72, 144, 216, 288],
-    6: [0, 60, 120, 180, 240, 300],
-    8: [0, 45, 90, 135, 180, 225, 270, 315],
-    10: [0, 36, 72, 108, 144, 180, 216, 252, 288, 324],
-    12: [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330],
-};
+const palateSelect = $q("select#palate-select");
 
-const colorData = { 0: {}, 30: {}, 36: {}, 45: {}, 60: {}, 72: {}, 90: {}, 108:{}, 120: {}, 135: {}, 144: {}, 150: {}, 180: {}, 210: {}, 216: {}, 225: {}, 240: {}, 252:{}, 270: {}, 288: {}, 300: {}, 315: {}, 324:{}, 330: {}, };
-const storeAdjustedColor = ((colorData) => 
-  (rgb, angle) => {
-    const hsl = hsl_output(rgbToHsl(rgb));
+const angleArray = [0];
+const palateAngles = {};
+const palates = [2, 3, 4, 5, 6, 8, 10, 12];
+palates.forEach((palateSize) => {
+    addPalateOption(palateSize);
+    palateAngles[palateSize] = [0];
+    const angle = 360 / palateSize;
+    for (let i = 1; i < palateSize; i++) {
+        palateAngles[palateSize].push(angle * i);
+        angleArray.push(angle * i);
+    }
+});
+const angles = [...new Set(angleArray)];
+const colorData = {};
+angles.forEach((angle) => (colorData[angle] = {}));
+const colorWidth = [12.5, 25];
+const storeAdjustedColor = (rgb, angle) => {
+    const [narrow, wide] = colorWidth;
     const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
     const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
     const adjusted_hex = buildHexValue(adjusted_rgb);
@@ -26,28 +31,28 @@ const storeAdjustedColor = ((colorData) =>
         color: `${getContrastColorHex(adjusted_rgb)}`,
     };
 
-    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 30)));
+    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, wide)));
     const very_lite_hex = buildHexValue(very_lite_rgb);
     color.very_lite = {
         backgroundColor: `${very_lite_hex}`,
         color: `${getContrastColorHex(very_lite_rgb)}`,
     };
 
-    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, 12.5)));
+    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, narrow)));
     const lite_hex = buildHexValue(lite_rgb);
     color.lite = {
         backgroundColor: `${lite_hex}`,
         color: `${getContrastColorHex(lite_rgb)}`,
     };
 
-    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -12.5)));
+    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -narrow)));
     const dark_hex = buildHexValue(dark_rgb);
     color.dark = {
         backgroundColor: `${dark_hex}`,
         color: `${getContrastColorHex(dark_rgb)}`,
     };
 
-    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -30)));
+    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -wide)));
     const very_dark_hex = buildHexValue(very_dark_rgb);
     color.very_dark = {
         backgroundColor: `${very_dark_hex}`,
@@ -81,17 +86,13 @@ const storeAdjustedColor = ((colorData) =>
         very_dark.style.backgroundColor = `#${color.very_dark.backgroundColor}`;
         very_dark.style.color = `#${color.very_dark.color}`;
     }
-    // console.log(color);
-})(colorData);
+};
 
-const angles = [
-    0, 30, 36, 45, 60, 72, 90, 108, 120, 135, 144, 150, 180, 210, 216, 225, 240, 252, 270, 288, 300, 315, 324, 330,
-];
-const displayComplementaryColors = ((angles) => (rgb) => {
+const generateComplementaryColors = (rgb) => {
     angles.forEach((angle) => {
         storeAdjustedColor(rgb, angle);
     });
-})(angles);
+};
 
 // define element variables
 const output = $q("body");
@@ -119,7 +120,7 @@ hsl_syncAllInputValues(hsl);
 const rgbHex = buildHexValue(rgb);
 setBackgroundColor(rgbHex);
 setAccentColor(rgbHex);
-displayComplementaryColors(rgb)
+generateComplementaryColors(rgb);
 displayHexValue(rgbHex);
 
 // create event listeners
@@ -143,7 +144,7 @@ hex.addEventListener("input", ({ target: { value } }) => {
     handleHexInput(value);
 });
 
-$q("#palate-select").addEventListener("change", ({ target }) => {
+palateSelect.addEventListener("change", ({ target }) => {
     palateOutput.querySelectorAll("p").forEach((p) => p.remove());
 
     const palateSize = target.value;
@@ -152,20 +153,34 @@ $q("#palate-select").addEventListener("change", ({ target }) => {
 
 // handle (color adjust) slider input events
 function rgb_handleColorInput(evt) {
-    const { target: { value, max, min, dataset: { color } } } = evt;
+    const {
+        target: {
+            value,
+            max,
+            min,
+            dataset: { color },
+        },
+    } = evt;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     rgb[color] = colorValue;
     rgb_syncInputValues(color, colorValue);
+    hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
     const hexValue = buildHexValue(rgb);
     setBackgroundColor(hexValue);
     setAccentColor(hexValue);
-    displayComplementaryColors(rgb)
     displayHexValue(hexValue);
-    hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
+    generateComplementaryColors(rgb);
 }
 
 function hsl_handleColorInput(evt) {
-    const { target: { value, max, min, dataset: { color } } } = evt;
+    const {
+        target: {
+            value,
+            max,
+            min,
+            dataset: { color },
+        },
+    } = evt;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     hsl[color] = colorValue;
     hsl_syncInputValues(color, colorValue);
@@ -173,8 +188,8 @@ function hsl_handleColorInput(evt) {
     const hexValue = buildHexValue(rgb);
     setBackgroundColor(hexValue);
     setAccentColor(hexValue);
-    displayComplementaryColors(rgb)
     displayHexValue(hexValue);
+    generateComplementaryColors(rgb);
 }
 
 // handle (hex) text input event
@@ -184,9 +199,9 @@ function handleHexInput(value) {
         setBackgroundColor(value);
         setAccentColor(value);
         Object.keys(rgb).forEach((color, i) => (rgb[color] = hexToNum(values[i])));
-        displayComplementaryColors(rgb);
         rgb_syncAllInputValues(rgb);
         hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
+        generateComplementaryColors(rgb);
     }
 }
 
@@ -354,43 +369,50 @@ function colorLightness(hsl, light) {
 }
 
 function buildPalate(size) {
-    palates[size].forEach((num) => {
+    palateAngles[size].forEach((angle) => {
         const palateClone = palateTemplate.content.cloneNode(true);
 
         const palate = palateClone.querySelector("p.show-color");
-        palate.classList.add(`palate-${num}`);
+        palate.classList.add(`palate-${angle}`);
 
         const very_lite = palateClone.querySelector("span.color-very-lite");
-        very_lite.innerText = `#${colorData[num].very_lite.backgroundColor}`;
-        very_lite.style.backgroundColor = `#${colorData[num].very_lite.backgroundColor}`;
-        very_lite.style.color = `#${colorData[num].very_lite.color}`;
+        very_lite.innerText = `#${colorData[angle].very_lite.backgroundColor}`;
+        very_lite.style.backgroundColor = `#${colorData[angle].very_lite.backgroundColor}`;
+        very_lite.style.color = `#${colorData[angle].very_lite.color}`;
 
         const lite = palateClone.querySelector("span.color-lite");
-        lite.innerText = `#${colorData[num].lite.backgroundColor}`;
-        lite.style.backgroundColor = `#${colorData[num].lite.backgroundColor}`;
-        lite.style.color = `#${colorData[num].lite.color}`;
+        lite.innerText = `#${colorData[angle].lite.backgroundColor}`;
+        lite.style.backgroundColor = `#${colorData[angle].lite.backgroundColor}`;
+        lite.style.color = `#${colorData[angle].lite.color}`;
 
         const norm = palateClone.querySelector("span.color-norm");
-        norm.innerText = `#${colorData[num].norm.backgroundColor}`;
-        norm.style.backgroundColor = `#${colorData[num].norm.backgroundColor}`;
-        norm.style.color = `#${colorData[num].norm.color}`;
+        norm.innerText = `#${colorData[angle].norm.backgroundColor}`;
+        norm.style.backgroundColor = `#${colorData[angle].norm.backgroundColor}`;
+        norm.style.color = `#${colorData[angle].norm.color}`;
 
         const dark = palateClone.querySelector("span.color-dark");
-        dark.innerText = `#${colorData[num].dark.backgroundColor}`;
-        dark.style.backgroundColor = `#${colorData[num].dark.backgroundColor}`;
-        dark.style.color = `#${colorData[num].dark.color}`;
+        dark.innerText = `#${colorData[angle].dark.backgroundColor}`;
+        dark.style.backgroundColor = `#${colorData[angle].dark.backgroundColor}`;
+        dark.style.color = `#${colorData[angle].dark.color}`;
 
         const very_dark = palateClone.querySelector("span.color-very-dark");
-        very_dark.innerText = `#${colorData[num].very_dark.backgroundColor}`;
-        very_dark.style.backgroundColor = `#${colorData[num].very_dark.backgroundColor}`;
-        very_dark.style.color = `#${colorData[num].very_dark.color}`;
+        very_dark.innerText = `#${colorData[angle].very_dark.backgroundColor}`;
+        very_dark.style.backgroundColor = `#${colorData[angle].very_dark.backgroundColor}`;
+        very_dark.style.color = `#${colorData[angle].very_dark.color}`;
 
         palateOutput.appendChild(palateClone);
-  })
+    });
 }
 
 function setAccentColor(hexColor) {
-  $qa(`input[type="range"]`).forEach((range) => {
-    range.style.accentColor = `#${hexColor}`;
+    $qa(`input[type="range"]`).forEach((range) => {
+        range.style.accentColor = `#${hexColor}`;
     });
+}
+
+function addPalateOption(size) {
+    const option = document.createElement("option");
+    option.value = size;
+    option.innerText = `${size} Colors`;
+    palateSelect.appendChild(option);
 }
