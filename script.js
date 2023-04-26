@@ -166,8 +166,10 @@ function hexToNum(hex) {
     return parseInt(hex, 16);
 }
 
-function rgbToHsl({ r, g, b }) {
-    (r /= 255), (g /= 255), (b /= 255);
+function rgbToHsl(rgb) {
+    const rgbInput = ({ r, g, b }) => ({ r: r / 255, g: g / 255, b: b / 255 });
+    const hslOutput = ({ h, s, l }) => ({ h: round(h * 359), s: round(s * 100), l: round(l * 100) });
+    const { r, g, b } = rgbInput(rgb);
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
     const l = (max + min) / 2;
@@ -195,6 +197,8 @@ function rgbToHsl({ r, g, b }) {
 }
 
 function hslToRgb(hsl) {
+    const hslInput = ({ h, s, l }) => ({ h: h / 359, s: s / 100, l: l / 100 });
+    const rgbOutput = ({ r, g, b }) => ({ r: round(r * 255), g: round(g * 255), b: round(b * 255) });
     const { h, s, l } = hslInput(hsl);
     let r, g, b;
 
@@ -213,24 +217,12 @@ function hslToRgb(hsl) {
         const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
         const p = 2 * l - q;
 
-        r = Math.round(hueToRgb(p, q, h + 1 / 3) * 255);
-        g = Math.round(hueToRgb(p, q, h) * 255);
-        b = Math.round(hueToRgb(p, q, h - 1 / 3) * 255);
+        r = hueToRgb(p, q, h + 1 / 3);
+        g = hueToRgb(p, q, h);
+        b = hueToRgb(p, q, h - 1 / 3);
     }
 
-    return { r, g, b };
-}
-
-// input  { h: 0~1, s:0~1, l:0~1 }
-// output { h: 0~359, s:0~100, l:0~100 }
-function hslOutput({ h, s, l }) {
-    return { h: Math.round(h * 359), s: Math.round(s * 100), l: Math.round(l * 100) };
-}
-
-// input  { h: 0~359, s:0~100, l:0~100 }
-// output { h: 0~1, s:0~1, l:0~1 }
-function hslInput({ h, s, l }) {
-    return { h: h / 359, s: s / 100, l: l / 100 };
+    return rgbOutput({ r, g, b });
 }
 
 function getAdjustedColor(rgb, angle) {
@@ -330,3 +322,5 @@ function updatePalateColors(palateElement, color) {
         shadeElement.style.color = `#${color[shade].color}`;
     })
 }
+
+function round(num) { return Math.round(num); }
