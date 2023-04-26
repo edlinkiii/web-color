@@ -67,55 +67,47 @@ palateSelect.addEventListener("change", ({ target }) => {
 });
 
 // handle (color adjust) slider input events
-function rgb_handleColorInput({
-    target: {
-        value,
-        max,
-        min,
-        dataset: { color },
-    },
-}) {
+function rgb_handleColorInput({ target }) {
+    const { value, max, min, dataset: { color } } = target;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     rgb[color] = colorValue;
     rgb_syncInputValues(color, colorValue);
     hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
-    const hexValue = buildHexValue(rgb);
-    setBackgroundColor(hexValue);
-    setAccentColor(hexValue);
-    displayHexValue(hexValue);
-    generateComplementaryColors(rgb);
+    updateDisplay(rgb);
 }
 
-function hsl_handleColorInput({
-    target: {
-        value,
-        max,
-        min,
-        dataset: { color },
-    },
-}) {
+function hsl_handleColorInput({ target }) {
+    const { value, max, min, dataset: { color } } = target;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     hsl[color] = colorValue;
     hsl_syncInputValues(color, colorValue);
     rgb_syncAllInputValues(update_rgb(hslToRgb(hsl_input(hsl))));
-    const hexValue = buildHexValue(rgb);
-    setBackgroundColor(hexValue);
-    setAccentColor(hexValue);
-    displayHexValue(hexValue);
-    generateComplementaryColors(rgb);
+    updateDisplay(rgb);
 }
 
 // handle (hex) text input event
-function handleHexInput(value) {
-    const values = value.match(/[0-9a-fA-F]{2}/g);
-    if (values?.length === 3) {
-        setBackgroundColor(value);
-        setAccentColor(value);
-        Object.keys(rgb).forEach((color, i) => (rgb[color] = hexToNum(values[i])));
+function handleHexInput(hexValue) {
+    const hexValues = hexValue.match(/[0-9a-fA-F]{2}/g);
+    if (hexValues?.length === 3) {
+        Object.keys(rgb).forEach((color, i) => (rgb[color] = hexToNum(hexValues[i])));
         rgb_syncAllInputValues(rgb);
         hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
-        generateComplementaryColors(rgb);
+        updateDisplay(rgb, hexValue)
     }
+}
+
+function updateDisplay(rgb, hex = null) {
+    const hexValue = hex ?? buildHexValue(rgb);
+    setBackgroundColor(hexValue);
+    setAccentColor(hexValue);
+    hex || displayHexValue(hexValue);
+    generateComplementaryColors(rgb);
+}
+
+function generateComplementaryColors(rgb) {
+    angles.forEach((angle) => {
+        storeAdjustedColor(rgb, angle);
+    });
 }
 
 // update code rgb/hsl values
@@ -377,10 +369,4 @@ function storeAdjustedColor(rgb, angle) {
     if (palate) {
         updatePalateColors(palate, color);
     }
-}
-
-function generateComplementaryColors(rgb) {
-    angles.forEach((angle) => {
-        storeAdjustedColor(rgb, angle);
-    });
 }
