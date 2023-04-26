@@ -4,7 +4,7 @@ body {
     align-items: center;
     height: 100vh;
     font-family: "Trebuchet MS", sans-serif;
-    y-overflow: auto;
+    overflow: auto;
 }
 body > div {
     margin: 20px;
@@ -85,7 +85,6 @@ p.show-color span {
     font-size: 1rem;
     text-align: center;
 }
-
 .align-center {
     text-align: center;
 }
