@@ -22,6 +22,8 @@ const palateTemplate = $q("#show-color");
 const palateSelect = $q("select#palate-select");
 
 // setup
+const BLACK = "000000";
+const WHITE = "FFFFFF";
 const angleArray = [0];
 const palateAngles = {};
 const palates = [2, 3, 4, 5, 6, 8, 10, 12, 15, 18, 20];
@@ -46,7 +48,7 @@ rgbSyncAllInputValues(rgb);
 const hsl = { h: 0, s: 0, l: 0 };
 hslSyncAllInputValues(hsl);
 
-const hex = rgbToHex(rgb);
+const hex = BLACK;
 setBackgroundColor(hex);
 setAccentColor(hex);
 generateComplementaryColors(rgb);
@@ -243,7 +245,7 @@ function getAdjustedColor(rgb, angle) {
 
 function getContrastColorHex({ r, g, b }) {
     const relativeLuminance = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
-    const contrastColor = relativeLuminance > 0.5 ? "000000" : "FFFFFF";
+    const contrastColor = relativeLuminance > 0.5 ? BLACK : WHITE;
     return contrastColor;
 }
 
