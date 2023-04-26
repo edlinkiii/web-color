@@ -49,10 +49,7 @@ const hsl = { h: 0, s: 0, l: 0 };
 hslSyncAllInputValues(hsl);
 
 const hex = BLACK;
-setBackgroundColor(hex);
-setAccentColor(hex);
-generateComplementaryColors(rgb);
-displayHexValue(hex);
+updateDisplay(rgb, hex)
 
 // create event listeners
 rgbInputArray.forEach((input) => input.addEventListener("input", rgbHandleColorInput));
