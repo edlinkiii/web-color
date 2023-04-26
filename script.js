@@ -153,6 +153,54 @@ function hslSyncAllInputValues(hsl) {
     }
 }
 
+function setAccentColor(hexColor) {
+    $qa(`input[type="range"]`).forEach((range) => {
+        range.style.accentColor = `#${hexColor}`;
+    });
+}
+
+function updatePalateColors(palateElement, color) {
+    const shades = ["verylite", "lite", "norm", "dark", "verydark"];
+    shades.forEach((shade) => {
+        const shadeElement = palateElement.querySelector(`span.color-${shade}`);
+        shadeElement.innerText = `#${color[shade].backgroundColor}`;
+        shadeElement.style.backgroundColor = `#${color[shade].backgroundColor}`;
+        shadeElement.style.color = `#${color[shade].color}`;
+    })
+}
+
+function storeAdjustedColor(rgb, angle) {
+    const [narrow, wide] = colorWidth;
+    const hslAdjusted = angle === 0 ? hsl : colorAdjust(hsl, angle);
+    const rgbAdjusted = angle === 0 ? rgb : hslToRgb(hslAdjusted);
+    const hexAdjusted = rgbToHex(rgbAdjusted);
+    const color = colorData[angle];
+    color.norm = {
+        backgroundColor: `${hexAdjusted}`,
+        color: `${getContrastColorHex(rgbAdjusted)}`,
+    };
+
+    const shades = [
+        ["verylite", wide],
+        ["lite", narrow],
+        ["dark", -narrow],
+        ["verydark", -wide],
+    ];
+    shades.forEach(([shadeName, shadeValue]) => {
+        const rgb = hslToRgb(colorLightness(hslAdjusted, shadeValue));
+        const hex = rgbToHex(rgb);
+        color[shadeName] = {
+            backgroundColor: `${hex}`,
+            color: `${getContrastColorHex(rgb)}`,
+        };
+    })
+
+    const palate = palateOutput.querySelector(`p.palate-${angle}`);
+    if (palate) {
+        updatePalateColors(palate, color);
+    }
+}
+
 // functions that do convertions
 function rgbToHex({ r, g, b }) {
     return `${numToHex(r)}${numToHex(g)}${numToHex(b)}`;
@@ -269,59 +317,11 @@ function buildPalate(size) {
     });
 }
 
-function setAccentColor(hexColor) {
-    $qa(`input[type="range"]`).forEach((range) => {
-        range.style.accentColor = `#${hexColor}`;
-    });
-}
-
 function addPalateOption(size) {
     const option = document.createElement("option");
     option.value = size;
     option.innerText = `${size} Colors`;
     palateSelect.appendChild(option);
-}
-
-function storeAdjustedColor(rgb, angle) {
-    const [narrow, wide] = colorWidth;
-    const hslAdjusted = angle === 0 ? hsl : colorAdjust(hsl, angle);
-    const rgbAdjusted = angle === 0 ? rgb : hslToRgb(hslAdjusted);
-    const hexAdjusted = rgbToHex(rgbAdjusted);
-    const color = colorData[angle];
-    color.norm = {
-        backgroundColor: `${hexAdjusted}`,
-        color: `${getContrastColorHex(rgbAdjusted)}`,
-    };
-
-    const shades = [
-        ["verylite", wide],
-        ["lite", narrow],
-        ["dark", -narrow],
-        ["verydark", -wide],
-    ];
-    shades.forEach(([shadeName, shadeValue]) => {
-        const rgb = hslToRgb(colorLightness(hslAdjusted, shadeValue));
-        const hex = rgbToHex(rgb);
-        color[shadeName] = {
-            backgroundColor: `${hex}`,
-            color: `${getContrastColorHex(rgb)}`,
-        };
-    })
-
-    const palate = palateOutput.querySelector(`p.palate-${angle}`);
-    if (palate) {
-        updatePalateColors(palate, color);
-    }
-}
-
-function updatePalateColors(palateElement, color) {
-    const shades = ["verylite", "lite", "norm", "dark", "verydark"];
-    shades.forEach((shade) => {
-        const shadeElement = palateElement.querySelector(`span.color-${shade}`);
-        shadeElement.innerText = `#${color[shade].backgroundColor}`;
-        shadeElement.style.backgroundColor = `#${color[shade].backgroundColor}`;
-        shadeElement.style.color = `#${color[shade].color}`;
-    })
 }
 
 // utility functions
