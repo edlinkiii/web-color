@@ -255,6 +255,7 @@ function colorLightness(hsl, diff) {
     return { ...hsl, l: l < 0 ? 0 : l > 100 ? 100 : l };
 }
 
+// functions that modify the DOM
 function buildPalate(size) {
     palateAngles[size].forEach((angle) => {
         const palateClone = palateTemplate.content.cloneNode(true);
@@ -323,4 +324,7 @@ function updatePalateColors(palateElement, color) {
     })
 }
 
-function round(num) { return Math.round(num); }
+// utility functions
+function round(num) {
+    return Math.round(num);
+}
