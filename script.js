@@ -70,7 +70,7 @@ function rgbHandleColorInput({ target }) {
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     rgb[color] = colorValue;
     rgbSyncInputValues(color, colorValue);
-    hslSyncAllInputValues(hslUpdate(hslOutput(rgbToHsl(rgb))));
+    hslSyncAllInputValues(hslUpdate(rgbToHsl(rgb)));
     updateDisplay(rgb);
 }
 
@@ -79,7 +79,7 @@ function hslHandleColorInput({ target }) {
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     hsl[color] = colorValue;
     hslSyncInputValues(color, colorValue);
-    rgbSyncAllInputValues(rgbUpdate(hslToRgb(hslInput(hsl))));
+    rgbSyncAllInputValues(rgbUpdate(hslToRgb(hsl)));
     updateDisplay(rgb);
 }
 
@@ -89,7 +89,7 @@ function hexHandleInput(hex) {
     if (hexValues?.length === 3) {
         Object.keys(rgb).forEach((color, i) => (rgb[color] = hexToNum(hexValues[i])));
         rgbSyncAllInputValues(rgb);
-        hslSyncAllInputValues(hslUpdate(hslOutput(rgbToHsl(rgb))));
+        hslSyncAllInputValues(hslUpdate(rgbToHsl(rgb)));
         updateDisplay(rgb, hex)
     }
 }
@@ -167,8 +167,6 @@ function hexToNum(hex) {
     return parseInt(hex, 16);
 }
 
-// input  { r: 0~255, g:0~255, b:0~255 }
-// output { h: 0~1, s:0~1, l:0~1 }
 function rgbToHsl({ r, g, b }) {
     (r /= 255), (g /= 255), (b /= 255);
     const max = Math.max(r, g, b);
@@ -194,12 +192,11 @@ function rgbToHsl({ r, g, b }) {
         h /= 6;
     }
 
-    return { h, s, l };
+    return hslOutput({ h, s, l });
 }
 
-// input  { h: 0~1, s:0~1, l:0~1 }
-// output { r: 0~255, g:0~255, b:0~255 }
-function hslToRgb({ h, s, l }) {
+function hslToRgb(hsl) {
+    const { h, s, l } = hslInput(hsl);
     let r, g, b;
 
     if (s === 0) {
@@ -237,17 +234,13 @@ function hslInput({ h, s, l }) {
     return { h: h / 359, s: s / 100, l: l / 100 };
 }
 
-// input  ({ r: 0~255, g:0~255, b:0~255 }, 0~359)
-// output { r: 0~255, g:0~255, b:0~255 }
 function getAdjustedColor(rgb, angle) {
-    const hsl = hslOutput(rgbToHsl(rgb));
+    const hsl = rgbToHsl(rgb);
     const hslAdjusted = colorAdjust(hsl, angle);
-    const rgbAdjusted = hslToRgb(hslInput(hslAdjusted));
+    const rgbAdjusted = hslToRgb(hslAdjusted);
     return rgbAdjusted;
 }
 
-// input  { r: 0~255, g:0~255, b:0~255 }
-// output 000000||FFFFFF
 function getContrastColorHex({ r, g, b }) {
     const relativeLuminance = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
     const contrastColor = relativeLuminance > 0.5 ? "000000" : "FFFFFF";
@@ -300,7 +293,7 @@ function addPalateOption(size) {
 function storeAdjustedColor(rgb, angle) {
     const [narrow, wide] = colorWidth;
     const hslAdjusted = angle === 0 ? hsl : colorAdjust(hsl, angle);
-    const rgbAdjusted = angle === 0 ? rgb : hslToRgb(hslInput(hslAdjusted));
+    const rgbAdjusted = angle === 0 ? rgb : hslToRgb(hslAdjusted);
     const hexAdjusted = rgbToHex(rgbAdjusted);
     const color = colorData[angle];
     color.norm = {
@@ -315,7 +308,7 @@ function storeAdjustedColor(rgb, angle) {
         ["verydark", -wide],
     ];
     shades.forEach(([shadeName, shadeValue]) => {
-        const rgb = hslToRgb(hslInput(colorLightness(hslAdjusted, shadeValue)));
+        const rgb = hslToRgb(colorLightness(hslAdjusted, shadeValue));
         const hex = rgbToHex(rgb);
         color[shadeName] = {
             backgroundColor: `${hex}`,
