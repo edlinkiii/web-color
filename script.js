@@ -4,19 +4,19 @@ const $qa = (multiSelector) => document.querySelectorAll(multiSelector);
 
 // define element variables
 const output = $q("body");
-const hex = $q("#hex");
-const rgb_inputs = {
+const hexInput = $q("#hex");
+const rgbInputs = {
     r: $qa("input[data-color='r']"),
     g: $qa("input[data-color='g']"),
     b: $qa("input[data-color='b']"),
 };
-const rgb_inputArray = [...rgb_inputs.r, ...rgb_inputs.g, ...rgb_inputs.b];
-const hsl_inputs = {
+const rgbInputArray = [...rgbInputs.r, ...rgbInputs.g, ...rgbInputs.b];
+const hslInputs = {
     h: $qa("input[data-color='h']"),
     s: $qa("input[data-color='s']"),
     l: $qa("input[data-color='l']"),
 };
-const hsl_inputArray = [...hsl_inputs.h, ...hsl_inputs.s, ...hsl_inputs.l];
+const hslInputArray = [...hslInputs.h, ...hslInputs.s, ...hslInputs.l];
 const palateOutput = $q("#palate-output");
 const palateTemplate = $q("#show-color");
 const palateSelect = $q("select#palate-select");
@@ -41,63 +41,61 @@ const colorWidth = [12.5, 25];
 
 // set and display defaults
 const rgb = { r: 0, g: 0, b: 0 };
-rgb_syncAllInputValues(rgb);
+rgbSyncAllInputValues(rgb);
 
 const hsl = { h: 0, s: 0, l: 0 };
-hsl_syncAllInputValues(hsl);
+hslSyncAllInputValues(hsl);
 
-const rgbHex = buildHexValue(rgb);
-setBackgroundColor(rgbHex);
-setAccentColor(rgbHex);
+const hex = rgbToHex(rgb);
+setBackgroundColor(hex);
+setAccentColor(hex);
 generateComplementaryColors(rgb);
-displayHexValue(rgbHex);
+displayHexValue(hex);
 
 // create event listeners
-rgb_inputArray.forEach((input) => input.addEventListener("input", rgb_handleColorInput));
+rgbInputArray.forEach((input) => input.addEventListener("input", rgbHandleColorInput));
 
-hsl_inputArray.forEach((input) => input.addEventListener("input", hsl_handleColorInput));
+hslInputArray.forEach((input) => input.addEventListener("input", hslHandleColorInput));
 
-hex.addEventListener("input", ({ target: { value } }) => handleHexInput(value));
+hexInput.addEventListener("input", ({ target: { value: hex } }) => hexHandleInput(hex));
 
-palateSelect.addEventListener("change", ({ target }) => {
+palateSelect.addEventListener("change", ({ target: { value: palateSize } }) => {
     palateOutput.querySelectorAll("p").forEach((p) => p.remove());
-
-    const palateSize = target.value;
     palateSize && buildPalate(palateSize);
 });
 
 // handle (color adjust) slider input events
-function rgb_handleColorInput({ target }) {
+function rgbHandleColorInput({ target }) {
     const { value, max, min, dataset: { color } } = target;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     rgb[color] = colorValue;
-    rgb_syncInputValues(color, colorValue);
-    hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
+    rgbSyncInputValues(color, colorValue);
+    hslSyncAllInputValues(hslUpdate(hslOutput(rgbToHsl(rgb))));
     updateDisplay(rgb);
 }
 
-function hsl_handleColorInput({ target }) {
+function hslHandleColorInput({ target }) {
     const { value, max, min, dataset: { color } } = target;
     const colorValue = parseInt(+value > +max ? max : +value < +min ? min : value);
     hsl[color] = colorValue;
-    hsl_syncInputValues(color, colorValue);
-    rgb_syncAllInputValues(update_rgb(hslToRgb(hsl_input(hsl))));
+    hslSyncInputValues(color, colorValue);
+    rgbSyncAllInputValues(rgbUpdate(hslToRgb(hslInput(hsl))));
     updateDisplay(rgb);
 }
 
 // handle (hex) text input event
-function handleHexInput(hexValue) {
-    const hexValues = hexValue.match(/[0-9a-fA-F]{2}/g);
+function hexHandleInput(hex) {
+    const hexValues = hex.match(/[0-9a-fA-F]{2}/g);
     if (hexValues?.length === 3) {
         Object.keys(rgb).forEach((color, i) => (rgb[color] = hexToNum(hexValues[i])));
-        rgb_syncAllInputValues(rgb);
-        hsl_syncAllInputValues(update_hsl(hsl_output(rgbToHsl(rgb))));
-        updateDisplay(rgb, hexValue)
+        rgbSyncAllInputValues(rgb);
+        hslSyncAllInputValues(hslUpdate(hslOutput(rgbToHsl(rgb))));
+        updateDisplay(rgb, hex)
     }
 }
 
 function updateDisplay(rgb, hex = null) {
-    const hexValue = hex ?? buildHexValue(rgb);
+    const hexValue = hex ?? rgbToHex(rgb);
     setBackgroundColor(hexValue);
     setAccentColor(hexValue);
     hex || displayHexValue(hexValue);
@@ -111,14 +109,14 @@ function generateComplementaryColors(rgb) {
 }
 
 // update code rgb/hsl values
-function update_rgb({ r, g, b }) {
+function rgbUpdate({ r, g, b }) {
     rgb.r = r;
     rgb.g = g;
     rgb.b = b;
     return rgb;
 }
 
-function update_hsl({ h, s, l }) {
+function hslUpdate({ h, s, l }) {
     hsl.h = h;
     hsl.s = s;
     hsl.l = l;
@@ -131,33 +129,33 @@ function setBackgroundColor(hexValue) {
 }
 
 function displayHexValue(hexValue) {
-    hex.value = `${hexValue}`;
+    hexInput.value = `${hexValue}`;
 }
 
-function rgb_syncInputValues(dataColor, value) {
-    rgb_inputs[dataColor].forEach((input) => (input.value = value));
+function rgbSyncInputValues(dataColor, value) {
+    rgbInputs[dataColor].forEach((input) => (input.value = value));
 }
 
-function rgb_syncAllInputValues(rgb) {
+function rgbSyncAllInputValues(rgb) {
     for (let dataColor in rgb) {
         let value = rgb[dataColor];
-        rgb_syncInputValues(dataColor, value);
+        rgbSyncInputValues(dataColor, value);
     }
 }
 
-function hsl_syncInputValues(dataColor, value) {
-    hsl_inputs[dataColor].forEach((input) => (input.value = value));
+function hslSyncInputValues(dataColor, value) {
+    hslInputs[dataColor].forEach((input) => (input.value = value));
 }
 
-function hsl_syncAllInputValues(hsl) {
+function hslSyncAllInputValues(hsl) {
     for (let dataColor in hsl) {
         let value = hsl[dataColor];
-        hsl_syncInputValues(dataColor, value);
+        hslSyncInputValues(dataColor, value);
     }
 }
 
 // functions that do convertions
-function buildHexValue({ r, g, b }) {
+function rgbToHex({ r, g, b }) {
     return `${numToHex(r)}${numToHex(g)}${numToHex(b)}`;
 }
 
@@ -229,23 +227,23 @@ function hslToRgb({ h, s, l }) {
 
 // input  { h: 0~1, s:0~1, l:0~1 }
 // output { h: 0~359, s:0~100, l:0~100 }
-function hsl_output({ h, s, l }) {
+function hslOutput({ h, s, l }) {
     return { h: Math.round(h * 359), s: Math.round(s * 100), l: Math.round(l * 100) };
 }
 
 // input  { h: 0~359, s:0~100, l:0~100 }
 // output { h: 0~1, s:0~1, l:0~1 }
-function hsl_input({ h, s, l }) {
+function hslInput({ h, s, l }) {
     return { h: h / 359, s: s / 100, l: l / 100 };
 }
 
 // input  ({ r: 0~255, g:0~255, b:0~255 }, 0~359)
 // output { r: 0~255, g:0~255, b:0~255 }
 function getAdjustedColor(rgb, angle) {
-    const hsl = hsl_output(rgbToHsl(rgb));
-    const adjusted_hsl = colorAdjust(hsl, angle);
-    const adjusted_rgb = hslToRgb(hsl_input(adjusted_hsl));
-    return adjusted_rgb;
+    const hsl = hslOutput(rgbToHsl(rgb));
+    const hslAdjusted = colorAdjust(hsl, angle);
+    const rgbAdjusted = hslToRgb(hslInput(hslAdjusted));
+    return rgbAdjusted;
 }
 
 // input  { r: 0~255, g:0~255, b:0~255 }
@@ -261,16 +259,16 @@ function setContrastColor(hexColor) {
 }
 
 function colorAdjust(hsl, angle) {
-    const _h = (hsl.h + angle) % 360;
+    const h = (hsl.h + angle) % 360;
     return {
         ...hsl,
-        h: _h < 0 ? 360 + _h : _h,
+        h: h < 0 ? 360 + h : h,
     };
 }
 
-function colorLightness(hsl, light) {
-    const _l = hsl.l + light;
-    return { ...hsl, l: _l < 0 ? 0 : _l > 100 ? 100 : _l };
+function colorLightness(hsl, diff) {
+    const l = hsl.l + diff;
+    return { ...hsl, l: l < 0 ? 0 : l > 100 ? 100 : l };
 }
 
 function buildPalate(size) {
@@ -280,7 +278,7 @@ function buildPalate(size) {
         const palate = palateClone.querySelector("p.show-color");
         palate.classList.add(`palate-${angle}`);
 
-        updatePalateColors(palateClone, colorData[angle]);
+        updatePalateColors(palate, colorData[angle]);
 
         palateOutput.appendChild(palateClone);
     });
@@ -299,74 +297,44 @@ function addPalateOption(size) {
     palateSelect.appendChild(option);
 }
 
-function updatePalateColors(palateElement, color) {
-    const very_lite = palateElement.querySelector("span.color-very-lite");
-    very_lite.innerText = `#${color.very_lite.backgroundColor}`;
-    very_lite.style.backgroundColor = `#${color.very_lite.backgroundColor}`;
-    very_lite.style.color = `#${color.very_lite.color}`;
-
-    const lite = palateElement.querySelector("span.color-lite");
-    lite.innerText = `#${color.lite.backgroundColor}`;
-    lite.style.backgroundColor = `#${color.lite.backgroundColor}`;
-    lite.style.color = `#${color.lite.color}`;
-
-    const norm = palateElement.querySelector("span.color-norm");
-    norm.innerText = `#${color.norm.backgroundColor}`;
-    norm.style.backgroundColor = `#${color.norm.backgroundColor}`;
-    norm.style.color = `#${color.norm.color}`;
-
-    const dark = palateElement.querySelector("span.color-dark");
-    dark.innerText = `#${color.dark.backgroundColor}`;
-    dark.style.backgroundColor = `#${color.dark.backgroundColor}`;
-    dark.style.color = `#${color.dark.color}`;
-
-    const very_dark = palateElement.querySelector("span.color-very-dark");
-    very_dark.innerText = `#${color.very_dark.backgroundColor}`;
-    very_dark.style.backgroundColor = `#${color.very_dark.backgroundColor}`;
-    very_dark.style.color = `#${color.very_dark.color}`;
-}
-
 function storeAdjustedColor(rgb, angle) {
     const [narrow, wide] = colorWidth;
-    const adjusted_hsl = angle === 0 ? hsl : colorAdjust(hsl, angle);
-    const adjusted_rgb = angle === 0 ? rgb : hslToRgb(hsl_input(adjusted_hsl));
-    const adjusted_hex = buildHexValue(adjusted_rgb);
+    const hslAdjusted = angle === 0 ? hsl : colorAdjust(hsl, angle);
+    const rgbAdjusted = angle === 0 ? rgb : hslToRgb(hslInput(hslAdjusted));
+    const hexAdjusted = rgbToHex(rgbAdjusted);
     const color = colorData[angle];
     color.norm = {
-        backgroundColor: `${adjusted_hex}`,
-        color: `${getContrastColorHex(adjusted_rgb)}`,
+        backgroundColor: `${hexAdjusted}`,
+        color: `${getContrastColorHex(rgbAdjusted)}`,
     };
 
-    const very_lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, wide)));
-    const very_lite_hex = buildHexValue(very_lite_rgb);
-    color.very_lite = {
-        backgroundColor: `${very_lite_hex}`,
-        color: `${getContrastColorHex(very_lite_rgb)}`,
-    };
-
-    const lite_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, narrow)));
-    const lite_hex = buildHexValue(lite_rgb);
-    color.lite = {
-        backgroundColor: `${lite_hex}`,
-        color: `${getContrastColorHex(lite_rgb)}`,
-    };
-
-    const dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -narrow)));
-    const dark_hex = buildHexValue(dark_rgb);
-    color.dark = {
-        backgroundColor: `${dark_hex}`,
-        color: `${getContrastColorHex(dark_rgb)}`,
-    };
-
-    const very_dark_rgb = hslToRgb(hsl_input(colorLightness(adjusted_hsl, -wide)));
-    const very_dark_hex = buildHexValue(very_dark_rgb);
-    color.very_dark = {
-        backgroundColor: `${very_dark_hex}`,
-        color: `${getContrastColorHex(very_dark_rgb)}`,
-    };
+    const shades = [
+        ["verylite", wide],
+        ["lite", narrow],
+        ["dark", -narrow],
+        ["verydark", -wide],
+    ];
+    shades.forEach(([shadeName, shadeValue]) => {
+        const rgb = hslToRgb(hslInput(colorLightness(hslAdjusted, shadeValue)));
+        const hex = rgbToHex(rgb);
+        color[shadeName] = {
+            backgroundColor: `${hex}`,
+            color: `${getContrastColorHex(rgb)}`,
+        };
+    })
 
     const palate = palateOutput.querySelector(`p.palate-${angle}`);
     if (palate) {
         updatePalateColors(palate, color);
     }
+}
+
+function updatePalateColors(palateElement, color) {
+    const shades = ["verylite", "lite", "norm", "dark", "verydark"];
+    shades.forEach((shade) => {
+        const shadeElement = palateElement.querySelector(`span.color-${shade}`);
+        shadeElement.innerText = `#${color[shade].backgroundColor}`;
+        shadeElement.style.backgroundColor = `#${color[shade].backgroundColor}`;
+        shadeElement.style.color = `#${color[shade].color}`;
+    })
 }
