@@ -1,4 +1,4 @@
-# Web Color
+# Web Color Helper
 Web color picker and adjustments (HEX, RGB, & HSL)
 
 😎 **Newly added self-generating color palates!**
