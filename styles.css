@@ -112,6 +112,15 @@ p.show-color span {
 }
 
 @media screen and (max-width: 720px) {
+    #palate-output {
+        padding: 0 10px;
+    }
+    p.show-color {
+        max-width: 500px;
+    }
+}
+
+@media screen and (max-width: 620px) {
     #input {
         width: 100%;
         border-radius: 0px;
@@ -119,6 +128,7 @@ p.show-color span {
     #palate-output {
         left: 0;
         margin: 310px auto 40px;
+        padding: 0;
     }
 }
 
@@ -127,11 +137,7 @@ p.show-color span {
         width: auto;
     }
     p.show-color {
-        display: flex;
-        overflow: hidden;
-        width: auto;
-        border: 1px solid #ddd;
-        padding: 0;
+        max-width: 520px;
         border-radius: 0;
         margin: 15px 0;
         border-width: 1px 0;
