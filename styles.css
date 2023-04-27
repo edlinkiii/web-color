@@ -1,25 +1,31 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: "Trebuchet MS", sans-serif;
-    overflow: auto;
+* {
+    box-sizing: border-box;
 }
-body > div {
-    margin: 20px;
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Trebuchet MS", sans-serif;
 }
 #input {
-    min-width: 210px;
-    height: auto;
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 300x;
+    padding: 0 5px;
+    border-radius: 0 0 10px 0;
     background-color: white;
+    box-shadow: 1px 1px 1px white;
+}
+#input > div {
+    margin: 10px 0;
 }
 input[type="range"] {
     cursor: ew-resize;
     accent-color: black;
+    min-width: 100px;
+    width: calc(100% - 80px);
 }
 select,
 input#hex,
@@ -31,7 +37,7 @@ input[type="number"] {
 }
 input#hex,
 input[type="number"] {
-    width: 40px;
+    width: 45px;
 }
 select:focus,
 input#hex:focus,
@@ -61,8 +67,13 @@ label:has(#hex:invalid)::after {
     left: 3px;
     top: 3px;
 }
-.color-palate {
-    display: none;
+#palate-output {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 200px;
+    margin: 10px auto;
+    text-align: center;
 }
 p {
     margin: 0;
@@ -72,11 +83,11 @@ p {
 p.show-color {
     display: flex;
     overflow: hidden;
-    width: 500px;
     border: 1px solid #ddd;
     padding: 0px;
     border-radius: 10px;
-    margin: 10px 0;
+    margin: 10px auto;
+    max-width: 500px;
 }
 p.show-color span {
     flex: 1;
@@ -85,6 +96,41 @@ p.show-color span {
     font-size: 1rem;
     text-align: center;
 }
+
 .align-center {
     text-align: center;
+}
+
+@media screen and (max-width: 730px) {
+    #input {
+        width: 100%;
+        border-radius: 0px;
+    }
+    #palate-output {
+        left: 0;
+        margin: 310px auto 40px;
+    }
+}
+
+@media screen and (max-width: 520px) {
+    #palate-output {
+        width: auto;
+    }
+    p.show-color {
+        display: flex;
+        overflow: hidden;
+        width: auto;
+        border: 1px solid #ddd;
+        padding: 0;
+        border-radius: 0;
+        margin: 15px 0;
+        border-width: 1px 0;
+    }
+}
+
+@media screen and (max-width: 365px) {
+    .color-lite,
+    .color-dark {
+        display: none !important;
+    }
 }

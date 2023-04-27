@@ -9,29 +9,55 @@
     </head>
     <body>
         <div id="input">
-            <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb" title="Red" />
-            <label for="rValue" title="Red">R:</label>
-            <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue" title="Red" />
-            <br />
-            <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb" title="Green" />
-            <label for="gValue" title="Green">G:</label>
-            <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue" title="Green" />
-            <br />
-            <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb" title="Blue" />
-            <label for="bValue" title="Blue">B:</label>
-            <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue" title="Blue" />
+            <div>
+                <input type="range" data-color="r" min="0" max="255" step="1" value="0" class="rgb" title="Red" />
+                <label for="rValue" title="Red">R:</label>
+                <input type="number" data-color="r" min="0" max="255" step="1" value="0" id="rValue" title="Red" />
+            </div>
+            <div>
+                <input type="range" data-color="g" min="0" max="255" step="1" value="0" class="rgb" title="Green" />
+                <label for="gValue" title="Green">G:</label>
+                <input type="number" data-color="g" min="0" max="255" step="1" value="0" id="gValue" title="Green" />
+            </div>
+            <div>
+                <input type="range" data-color="b" min="0" max="255" step="1" value="0" class="rgb" title="Blue" />
+                <label for="bValue" title="Blue">B:</label>
+                <input type="number" data-color="b" min="0" max="255" step="1" value="0" id="bValue" title="Blue" />
+            </div>
             <hr />
-            <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl" title="Hue" />
-            <label for="hValue" title="Hue">H:</label>
-            <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue" title="Hue" />
-            <br />
-            <input type="range" data-color="s" min="0" max="100" step="1" value="0" class="hsl" title="Saturation" />
-            <label for="sValue" title="Saturation">S:</label>
-            <input type="number" data-color="s" min="0" max="100" step="1" value="0" id="sValue" title="Saturation" />
-            <br />
-            <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl" title="Light" />
-            <label for="lValue" title="Light">L:</label>
-            <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue" title="Light" />
+            <div>
+                <input type="range" data-color="h" min="0" max="359" step="1" value="0" class="hsl" title="Hue" />
+                <label for="hValue" title="Hue">H:</label>
+                <input type="number" data-color="h" min="0" max="359" step="1" value="0" id="hValue" title="Hue" />
+            </div>
+            <div>
+                <input
+                    type="range"
+                    data-color="s"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="0"
+                    class="hsl"
+                    title="Saturation"
+                />
+                <label for="sValue" title="Saturation">S:</label>
+                <input
+                    type="number"
+                    data-color="s"
+                    min="0"
+                    max="100"
+                    step="1"
+                    value="0"
+                    id="sValue"
+                    title="Saturation"
+                />
+            </div>
+            <div>
+                <input type="range" data-color="l" min="0" max="100" step="1" value="0" class="hsl" title="Light" />
+                <label for="lValue" title="Light">L:</label>
+                <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue" title="Light" />
+            </div>
             <hr />
             <div class="align-center">
                 <label for="hex">
@@ -46,7 +72,7 @@
                     />
                 </label>
             </div>
-            <br />
+            <hr />
             <div class="align-center">
                 <label for="palate-select">Show Palate:</label>
                 <select id="palate-select">
