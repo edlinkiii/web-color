@@ -24,9 +24,27 @@ body {
 }
 input[type="range"] {
     cursor: ew-resize;
-    accent-color: black;
     min-width: 100px;
     width: calc(100% - 80px);
+    color-scheme: light;
+}
+input[data-color="r"][type="range"] {
+    accent-color: rgb(255, 0, 0);
+}
+input[data-color="g"][type="range"] {
+    accent-color: rgb(0, 255, 0);
+}
+input[data-color="b"][type="range"] {
+    accent-color: rgb(0, 0, 255);
+}
+input[data-color="h"][type="range"] {
+    accent-color: hsl(0, 100%, 50%);
+}
+input[data-color="s"][type="range"] {
+    accent-color: hsl(0, 0%, 50%);
+}
+input[data-color="l"][type="range"] {
+    accent-color: hsl(0, 0%, 100%);
 }
 select,
 input#hex,

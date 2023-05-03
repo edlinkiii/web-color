@@ -96,7 +96,7 @@ function hexHandleInput(hex) {
 function updateDisplay(rgb, hex = null) {
     const hexValue = hex ?? rgbToHex(rgb);
     setBackgroundColor(hexValue);
-    setAccentColor(hexValue);
+    // setSaturationAccentColor(hexValue);
     hex || displayHexValue(hexValue);
     generateComplementaryColors(rgb);
 }
@@ -144,6 +144,19 @@ function rgbSyncAllInputValues(rgb) {
 
 function hslSyncInputValues(dataColor, value) {
     hslInputs[dataColor].forEach((input) => (input.value = value));
+
+    if(dataColor === "h") {
+        $q(`input[type="range"][data-color="h"]`).style.accentColor = `hsl(${value}, 100%, 50%)`;
+        $q(`input[type="range"][data-color="s"]`).style.accentColor = `hsl(${value}, ${hsl.s}%, 50%)`;
+        $q(`input[type="range"][data-color="l"]`).style.accentColor = `hsl(${value}, 100%, ${hsl.l}%)`;
+    }
+    if(dataColor === "s") {
+        $q(`input[type="range"][data-color="s"]`).style.accentColor = `hsl(${hsl.h}, ${value}%, 50%)`;
+    }
+    if(dataColor === "l") {
+        $q(`input[type="range"][data-color="l"]`).style.accentColor = `hsl(${hsl.h}, 100%, ${value}%)`;
+        // $q(`input[type="range"][data-color="l"]`).style.accentColor = `hsl(0, 0%, ${value}%)`; // just grayscale
+    }
 }
 
 function hslSyncAllInputValues(hsl) {
@@ -153,8 +166,8 @@ function hslSyncAllInputValues(hsl) {
     }
 }
 
-function setAccentColor(hexColor) {
-    $qa(`input[type="range"]`).forEach((range) => {
+function setSaturationAccentColor(hexColor) {
+    $qa(`input[type="range"][data-color="s"]`).forEach((range) => {
         range.style.accentColor = `#${hexColor}`;
     });
 }
