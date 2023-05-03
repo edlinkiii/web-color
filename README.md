@@ -15,4 +15,5 @@ Web color picker and adjustments (HEX, RGB, & HSL)
 -   Select desired inputs/outputs to be displayed
 -   Add modal for palate elements with color data
 -   Add selectable HTML color names
+-   Implement State-based (declaritive/reactive) UI
 -   PWA
