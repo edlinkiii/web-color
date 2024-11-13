@@ -46,6 +46,20 @@ input[data-color="s"][type="range"] {
 input[data-color="l"][type="range"] {
     accent-color: hsl(0, 0%, 100%);
 }
+
+input[data-color="c"][type="range"] {
+    accent-color: rgb(0, 255, 255);
+}
+input[data-color="m"][type="range"] {
+    accent-color: rgb(255, 0, 255);
+}
+input[data-color="y"][type="range"] {
+    accent-color: rgb(255, 255, 0);
+}
+input[data-color="k"][type="range"] {
+    accent-color: rgb(0, 0, 0);
+}
+
 select,
 input#hex,
 input[type="number"] {

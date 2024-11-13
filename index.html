@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="./css/styles.css" defer />
-        <script src="./js/src/script.js" defer></script>
+        <script src="./js/src/script.js" type="module" defer></script>
         <title>Web Color Picker</title>
     </head>
     <body>
@@ -60,6 +60,27 @@
                 <input type="number" data-color="l" min="0" max="100" step="1" value="0" id="lValue" title="Light" />
             </div>
             <hr />
+            <div>
+                <input type="range" data-color="c" min="0" max="100" step="1" value="0" class="cmyk" title="Cyan" />
+                <label for="cValue" title="Cyan">C:</label>
+                <input type="number" data-color="c" min="0" max="100" step="1" value="0" id="cValue" title="Cyan" />
+            </div>
+            <div>
+                <input type="range" data-color="m" min="0" max="100" step="1" value="0" class="cmyk" title="Magenta" />
+                <label for="cValue" title="Magenta">M:</label>
+                <input type="number" data-color="m" min="0" max="100" step="1" value="0" id="mValue" title="Magenta" />
+            </div>
+            <div>
+                <input type="range" data-color="y" min="0" max="100" step="1" value="0" class="cmyk" title="Yellow" />
+                <label for="yValue" title="Yellow">Y:</label>
+                <input type="number" data-color="y" min="0" max="100" step="1" value="0" id="yValue" title="Yellow" />
+            </div>
+            <div>
+                <input type="range" data-color="k" min="0" max="100" step="1" value="0" class="cmyk" title="Black" />
+                <label for="kValue" title="Black">K:</label>
+                <input type="number" data-color="k" min="0" max="100" step="1" value="0" id="kValue" title="Black" />
+            </div>
+            <hr />
             <div class="align-center">
                 <label for="hex">
                     #<input
@@ -70,6 +91,7 @@
                         value="000000"
                         required
                         title="Hex Code"
+                        data-color="x"
                     />
                 </label>
             </div>
